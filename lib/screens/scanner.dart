@@ -1,8 +1,10 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:green_book/services/qrcode_decrypt.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'dart:io';
 
 class Scanner extends StatefulWidget {
   const Scanner({Key? key}) : super(key: key);
@@ -77,10 +79,10 @@ class _ScannerState extends State<Scanner> {
     this.controller = controller;
     controller.scannedDataStream.listen((scanData) async {
       controller.pauseCamera();
-      if (await canLaunch(scanData.code)) {
-        await launch(scanData.code);
+      if (scanData.code.substring(0, 4) != "HC1:") {
+        _displayErrorMessage();
       } else {
-        _displayMessage(scanData).then((value) => controller.resumeCamera());
+        _displayMessage(scanData);
       }
       controller.resumeCamera();
     });
@@ -89,7 +91,6 @@ class _ScannerState extends State<Scanner> {
   Future<dynamic> _displayMessage(Barcode scanData) {
     debugPrint("Scanned DATA: " + scanData.code);
     QrCodeDecrypt qcd = QrCodeDecrypt(scanData.code);
-
     return showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -107,11 +108,56 @@ class _ScannerState extends State<Scanner> {
               TextButton(
                 child: const Text("ok"),
                 onPressed: () {
+                  _saveCapturedCodeToFile(scanData);
                   Navigator.of(context).pop();
                 },
               ),
             ],
           );
         });
+  }
+
+  Future<dynamic> _displayErrorMessage() {
+    return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text("QR code scan failed:"),
+            content: SingleChildScrollView(
+              child: ListBody(
+                children: const [
+                  Text('Not a valid EU COVID PASS'),
+                ],
+              ),
+            ),
+            actions: [
+              TextButton(
+                child: const Text("ok"),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        });
+  }
+
+  Future<void> _saveCapturedCodeToFile(Barcode scannedData) async {
+    //TODO doesn't have to save the QR image.. only save the crypted data
+    //and read back again..
+    //this might cause some additional reads :(
+    var content = scannedData.code;
+    //var type = scannedData.format;
+    //var rawBytes = scannedData.rawBytes; //these are only supported by android
+    String localPath = await _localPath;
+    File testfile = await File('$localPath/test.txt').create();
+    await testfile.writeAsString(content);
+    String fileContent = await testfile.readAsString();
+    print(fileContent);
+  }
+
+  Future<String> get _localPath async {
+    final directory = await getApplicationDocumentsDirectory();
+    return directory.path;
   }
 }
