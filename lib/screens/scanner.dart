@@ -1,19 +1,17 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:green_book/services/qrcode_decrypt.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:green_book/services/qrcode_saver.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
-import 'dart:io';
 
-class Scanner extends StatefulWidget {
-  const Scanner({Key? key}) : super(key: key);
+class QrCodeScanner extends StatefulWidget {
+  const QrCodeScanner({Key? key}) : super(key: key);
 
   @override
-  _ScannerState createState() => _ScannerState();
+  _QrCodeScannerState createState() => _QrCodeScannerState();
 }
 
-class _ScannerState extends State<Scanner> {
+class _QrCodeScannerState extends State<QrCodeScanner> {
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
   late QRViewController controller;
 
@@ -29,11 +27,11 @@ class _ScannerState extends State<Scanner> {
       appBar: AppBar(
         title: const Text("Scanner"),
       ),
-      body: _composeStack(),
+      body: _composeBodyStack(),
     );
   }
 
-  Stack _composeStack() {
+  Stack _composeBodyStack() {
     return Stack(
       children: [
         Column(
@@ -79,36 +77,35 @@ class _ScannerState extends State<Scanner> {
     this.controller = controller;
     controller.scannedDataStream.listen((scanData) async {
       controller.pauseCamera();
-      if (scanData.code.substring(0, 4) != "HC1:") {
-        _displayErrorMessage();
-      } else {
+      if (scanData.code.substring(0, 4) == "HC1:") {
         _displayMessage(scanData);
+      } else {
+        _displayErrorMessage();
       }
       controller.resumeCamera();
     });
   }
 
   Future<dynamic> _displayMessage(Barcode scanData) {
-    debugPrint("Scanned DATA: " + scanData.code);
-    QrCodeDecrypt qcd = QrCodeDecrypt(scanData.code);
     return showDialog(
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: const Text("Decrypted QR code:"),
+            title: const Text("QR CODE"),
             content: SingleChildScrollView(
               child: ListBody(
-                children: [
-                  Text('Barcode Type: ${describeEnum(scanData.format)}'),
-                  Text('Data: ${qcd.decryptCode()}'),
+                children: const [
+                  Text("Succesful read"),
+                  // Text('Barcode Type: ${describeEnum(scanData.format)}'),
+                  // Text('Data: ${qcd.parseCertificate()}'),
                 ],
               ),
             ),
             actions: [
               TextButton(
-                child: const Text("ok"),
+                child: const Text("OK"),
                 onPressed: () {
-                  _saveCapturedCodeToFile(scanData);
+                  QrCodeSaver.saveCodeToSecureStorage(scanData);
                   Navigator.of(context).pop();
                 },
               ),
@@ -122,7 +119,7 @@ class _ScannerState extends State<Scanner> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: const Text("QR code scan failed:"),
+            title: const Text("Failed to scan QR code"),
             content: SingleChildScrollView(
               child: ListBody(
                 children: const [
@@ -132,7 +129,7 @@ class _ScannerState extends State<Scanner> {
             ),
             actions: [
               TextButton(
-                child: const Text("ok"),
+                child: const Text("OK"),
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
@@ -140,24 +137,5 @@ class _ScannerState extends State<Scanner> {
             ],
           );
         });
-  }
-
-  Future<void> _saveCapturedCodeToFile(Barcode scannedData) async {
-    //TODO doesn't have to save the QR image.. only save the crypted data
-    //and read back again..
-    //this might cause some additional reads :(
-    var content = scannedData.code;
-    //var type = scannedData.format;
-    //var rawBytes = scannedData.rawBytes; //these are only supported by android
-    String localPath = await _localPath;
-    File testfile = await File('$localPath/test.txt').create();
-    await testfile.writeAsString(content);
-    String fileContent = await testfile.readAsString();
-    print(fileContent);
-  }
-
-  Future<String> get _localPath async {
-    final directory = await getApplicationDocumentsDirectory();
-    return directory.path;
   }
 }
