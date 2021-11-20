@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:green_book/model/hc1.dart';
-import 'package:green_book/utils/common_utils.dart';
 import 'package:green_book/screens/single_certificate.dart';
 import 'package:green_book/services/qrcode_saver.dart';
 
@@ -20,18 +19,15 @@ class _GreenBookListState extends State<GreenBookList> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: const CommonAppBar(),
-      body: FutureBuilder<List<Hc1>>(
-          future: QrCodeSaver.getAndParseSavedCertificatesSecure(),
-          builder: (context, AsyncSnapshot<List<Hc1>> snapshot) {
-            if (snapshot.hasData) {
-              return _certificateList(snapshot.data ?? []);
-            } else {
-              return const CircularProgressIndicator();
-            }
-          }),
-    );
+    return FutureBuilder<List<Hc1>>(
+        future: QrCodeSaver.getAndParseSavedCertificatesSecure(),
+        builder: (context, AsyncSnapshot<List<Hc1>> snapshot) {
+          if (snapshot.hasData) {
+            return _certificateList(snapshot.data ?? []);
+          } else {
+            return const CircularProgressIndicator();
+          }
+        });
   }
 
   ListView _certificateList(List<Hc1> list) {

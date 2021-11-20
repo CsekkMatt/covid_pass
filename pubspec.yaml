@@ -44,6 +44,7 @@ dependencies:
   shared_preferences: ^2.0.8
   http: ^0.13.4
   flutter_secure_storage: ^4.2.1
+  flutter_ticket_widget: ^0.0.1
 
 
 dev_dependencies:

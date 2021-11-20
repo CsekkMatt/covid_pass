@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:green_book/utils/common_utils.dart';
+import 'package:green_book/screens/list_data.dart';
 import 'package:green_book/screens/scanner.dart';
 import 'package:green_book/screens/wallet_list.dart';
+import 'package:green_book/utils/common_utils.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
 void main() {
@@ -35,36 +36,41 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        backgroundColor: Colors.green,
         appBar: const CommonAppBar(),
-        body: Container(
-          child: Column(
-            children: [
-              QrImage(
-                data: "Test QR CODE with covid data",
-                version: QrVersions.auto,
-                size: 200.0,
-              ),
-              ElevatedButton(
-                  child: const Text("Scan"),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const QrCodeScanner()),
-                    );
-                  }),
-              ElevatedButton(
-                  child: const Text("List Certificates"),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const GreenBookList()),
-                    );
-                  }),
-            ],
+        body: TestScreen());
+  }
+
+  Container _cnt() {
+    return Container(
+      child: Column(
+        children: [
+          QrImage(
+            data: "Test QR CODE with covid data",
+            version: QrVersions.auto,
+            size: 200.0,
           ),
-          alignment: Alignment.center,
-        ));
+          ElevatedButton(
+              child: const Text("Scan"),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const QrCodeScanner()),
+                );
+              }),
+          ElevatedButton(
+              child: const Text("List Certificates"),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const GreenBookList()),
+                );
+              }),
+        ],
+      ),
+      alignment: Alignment.center,
+    );
   }
 }
