@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:green_book/screens/list_data.dart';
+import 'package:flutter/foundation.dart';
 import 'package:green_book/screens/scanner.dart';
 import 'package:green_book/screens/wallet_list.dart';
+import 'package:green_book/services/qrcode_saver.dart';
 import 'package:green_book/utils/common_utils.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
@@ -15,6 +17,9 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    if (kDebugMode) {
+      saveExampleData();
+    }
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
@@ -22,6 +27,11 @@ class MyApp extends StatelessWidget {
       ),
       home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );
+  }
+
+  void saveExampleData() {
+    String exampleCode = '';
+    QrCodeSaver.saveCodeToSecureStorageString(exampleCode);
   }
 }
 
@@ -35,7 +45,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
         backgroundColor: Colors.green,
         appBar: CommonAppBar(),
         body: GreenBookList());

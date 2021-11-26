@@ -43,6 +43,10 @@ class QrCodeSaver {
     sharedPreferences.setString(ciCode!, scannedData.code);
   }
 
+  static Future<void> saveCodeToSecureStorageString(String code) {
+    return saveCodeToSecureStorage(Barcode(code, BarcodeFormat.qrcode, null));
+  }
+
   static Future<void> saveCodeToSecureStorage(Barcode scannedData) async {
     String? ciCode = QrCodeDecrypt(scannedData.code).getCiCode();
     const storage = FlutterSecureStorage();

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_ticket_widget/flutter_ticket_widget.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import 'package:ticketview/ticketview.dart';
 
 class TestScreen extends StatefulWidget {
   TestScreen({Key? key}) : super(key: key);
@@ -29,13 +29,15 @@ class _TestScreenState extends State<TestScreen>
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
     return Center(
-      child: FlutterTicketWidget(
-        height: height * 0.6,
-        width: width * 0.9,
-        isCornerRounded: true,
-        child: Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: containerHomePage(context),
+      child: TicketView(
+        // child: Padding(
+        //   padding: const EdgeInsets.all(10.0),
+        //   child: containerHomePage(context),
+        // ),
+        child: Container(
+          height: height,
+          width: width,
+          child: Text("Szia"),
         ),
       ),
     );
@@ -96,20 +98,22 @@ class _TestScreenState extends State<TestScreen>
                 ),
               ),
               Container(
-                decoration: BoxDecoration(
-                  border: Border.all(width: 10.0, style: BorderStyle.solid),
-                  color: Colors.white,
-                ),
+                // decoration: BoxDecoration(
+                //   border: Border.all(width: 10.0, style: BorderStyle.none),
+                //   color: Colors.white,
+                // ),
                 alignment: Alignment.center,
                 //padding: const EdgeInsets.fromLTRB(0, 100.0, 0, 0),
                 child: Container(
-                  decoration:
-                      BoxDecoration(border: Border.all(color: Colors.green)),
+                  // decoration: BoxDecoration(
+                  //   border: Border.all(
+                  //       color: Colors.green, style: BorderStyle.none),
+                  // ),
                   child: Center(
                     child: QrImage(
                       data: "akortssselma",
                       version: QrVersions.auto,
-                      size: 400,
+                      size: 300,
                     ),
                   ),
                 ),
@@ -118,27 +122,6 @@ class _TestScreenState extends State<TestScreen>
           ),
         ],
       ),
-    );
-  }
-
-  Column _buildButtonColumn(Color color, IconData icon, String label) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Icon(icon, color: color),
-        Container(
-          margin: const EdgeInsets.only(top: 8),
-          child: Text(
-            label,
-            style: TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.w400,
-              color: color,
-            ),
-          ),
-        ),
-      ],
     );
   }
 
