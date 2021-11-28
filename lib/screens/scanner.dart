@@ -63,9 +63,7 @@ class _QrCodeScannerState extends State<QrCodeScanner> {
             ),
             const Expanded(
               flex: 1,
-              child: Center(
-                child: Text("Scan a code"),
-              ),
+              child: const Text("Save"),
             ),
           ],
         )
@@ -102,16 +100,30 @@ class _QrCodeScannerState extends State<QrCodeScanner> {
               ),
             ),
             actions: [
-              TextButton(
-                child: const Text("OK"),
-                onPressed: () {
-                  QrCodeSaver.saveCodeToSecureStorage(scanData);
-                  Navigator.of(context).pop();
-                },
-              ),
+              saveQrCode(scanData, context),
             ],
           );
         });
+  }
+
+  TextButton saveQrCode(Barcode scanData, BuildContext context) {
+    return TextButton(
+      style: ButtonStyle(
+        foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+        backgroundColor: MaterialStateProperty.all<Color>(Colors.green),
+        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+          RoundedRectangleBorder(
+            borderRadius: BorderRadius.zero,
+            side: BorderSide(color: Colors.green),
+          ),
+        ),
+      ),
+      child: const Text("Save"),
+      onPressed: () {
+        QrCodeSaver.saveCodeToSecureStorage(scanData);
+        Navigator.of(context).pop();
+      },
+    );
   }
 
   Future<dynamic> _displayErrorMessage() {

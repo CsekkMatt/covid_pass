@@ -30,6 +30,14 @@ class _TestScreenState extends State<TestScreen>
     double width = MediaQuery.of(context).size.width;
     return Center(
       child: TicketView(
+        backgroundPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 20),
+        backgroundColor: Color(0xFF8F1299),
+        contentPadding: EdgeInsets.symmetric(vertical: 24, horizontal: 0),
+        drawArc: false,
+        triangleAxis: Axis.vertical,
+        borderRadius: 6,
+        drawDivider: true,
+        trianglePos: .5,
         // child: Padding(
         //   padding: const EdgeInsets.all(10.0),
         //   child: containerHomePage(context),

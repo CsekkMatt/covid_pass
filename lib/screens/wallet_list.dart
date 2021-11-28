@@ -47,6 +47,17 @@ class _GreenBookListState extends State<GreenBookList> {
               title: Text(_getName(list[index]) ?? 'Name'),
               subtitle: Text(
                   list[index].certificate!.vaccinationInfo!.dt ?? "Date Time"),
+              trailing: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  IconButton(
+                    icon: Icon(Icons.delete),
+                    onPressed: () {
+                      //delete from secure storage
+                    },
+                  )
+                ],
+              ),
             ),
           );
         });
