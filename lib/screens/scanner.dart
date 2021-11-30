@@ -1,6 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:green_book/main.dart';
+import 'package:green_book/screens/wallet_list.dart';
 import 'package:green_book/services/qrcode_saver.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
@@ -61,10 +63,15 @@ class _QrCodeScannerState extends State<QrCodeScanner> {
                 ],
               ),
             ),
-            const Expanded(
-              flex: 1,
-              child: const Text("Save"),
-            ),
+            // Expanded(
+            //   flex: 1,
+            //   child: Center(
+            //     child: TextButton(
+            //         style: _defaultButtonStyle(),
+            //         onPressed: () {}, //do nothing
+            //         child: const Text("Do nothing?")),
+            //   ),
+            // ),
           ],
         )
       ],
@@ -89,7 +96,10 @@ class _QrCodeScannerState extends State<QrCodeScanner> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: const Text("QR CODE"),
+            title: Text(
+              "QR CODE",
+              style: _defaultTextStyle(),
+            ),
             content: SingleChildScrollView(
               child: ListBody(
                 children: const [
@@ -108,21 +118,27 @@ class _QrCodeScannerState extends State<QrCodeScanner> {
 
   TextButton saveQrCode(Barcode scanData, BuildContext context) {
     return TextButton(
-      style: ButtonStyle(
-        foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
-        backgroundColor: MaterialStateProperty.all<Color>(Colors.green),
-        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-          RoundedRectangleBorder(
-            borderRadius: BorderRadius.zero,
-            side: BorderSide(color: Colors.green),
-          ),
-        ),
-      ),
+      style: _defaultButtonStyle(),
       child: const Text("Save"),
       onPressed: () {
         QrCodeSaver.saveCodeToSecureStorage(scanData);
-        Navigator.of(context).pop();
+        NavigatorState nav = Navigator.of(context);
+        nav.pop();
+        nav.push(MaterialPageRoute(builder: (context) => MyHomePage()));
       },
+    );
+  }
+
+  ButtonStyle _defaultButtonStyle() {
+    return ButtonStyle(
+      foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+      backgroundColor: MaterialStateProperty.all<Color>(Colors.green),
+      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+        RoundedRectangleBorder(
+          borderRadius: BorderRadius.zero,
+          side: BorderSide(color: Colors.green),
+        ),
+      ),
     );
   }
 
@@ -131,7 +147,10 @@ class _QrCodeScannerState extends State<QrCodeScanner> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: const Text("Failed to scan QR code"),
+            title: Text(
+              "Failed to scan QR code",
+              style: _defaultTextStyle(),
+            ),
             content: SingleChildScrollView(
               child: ListBody(
                 children: const [
@@ -141,6 +160,7 @@ class _QrCodeScannerState extends State<QrCodeScanner> {
             ),
             actions: [
               TextButton(
+                style: _defaultButtonStyle(),
                 child: const Text("OK"),
                 onPressed: () {
                   Navigator.of(context).pop();
@@ -149,5 +169,12 @@ class _QrCodeScannerState extends State<QrCodeScanner> {
             ],
           );
         });
+  }
+
+  TextStyle _defaultTextStyle() {
+    return TextStyle(
+      color: Colors.green,
+      backgroundColor: Colors.white,
+    );
   }
 }

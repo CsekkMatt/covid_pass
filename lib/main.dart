@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:green_book/screens/list_data.dart';
 import 'package:flutter/foundation.dart';
-import 'package:green_book/screens/scanner.dart';
 import 'package:green_book/screens/wallet_list.dart';
 import 'package:green_book/services/qrcode_saver.dart';
 import 'package:green_book/utils/common_utils.dart';
-import 'package:qr_flutter/qr_flutter.dart';
 
 void main() {
   runApp(const MyApp());
@@ -25,7 +23,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.green,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const MyHomePage(),
     );
   }
 
@@ -36,8 +34,7 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key, required this.title}) : super(key: key);
-  final String title;
+  const MyHomePage({Key? key}) : super(key: key);
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
@@ -50,38 +47,5 @@ class _MyHomePageState extends State<MyHomePage> {
         appBar: CommonAppBar(),
         // body: TestScreen());
         body: GreenBookList());
-  }
-
-  Container _cnt() {
-    return Container(
-      child: Column(
-        children: [
-          QrImage(
-            data: "Test QR CODE with covid data",
-            version: QrVersions.auto,
-            size: 200.0,
-          ),
-          ElevatedButton(
-              child: const Text("Scan"),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const QrCodeScanner()),
-                );
-              }),
-          ElevatedButton(
-              child: const Text("List Certificates"),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const GreenBookList()),
-                );
-              }),
-        ],
-      ),
-      alignment: Alignment.center,
-    );
   }
 }

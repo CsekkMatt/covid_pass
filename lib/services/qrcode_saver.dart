@@ -58,4 +58,9 @@ class QrCodeSaver {
   static Future<String?> getQrCodeFromSecureStorage(String? cid) async {
     return await const FlutterSecureStorage().read(key: cid!);
   }
+
+  static void deleteQrCodeFromStorage(String? qrCodeKey) {
+    FlutterSecureStorage() //
+        .delete(key: qrCodeKey ?? "");
+  }
 }

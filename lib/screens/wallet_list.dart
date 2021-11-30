@@ -53,7 +53,11 @@ class _GreenBookListState extends State<GreenBookList> {
                   IconButton(
                     icon: Icon(Icons.delete),
                     onPressed: () {
-                      //delete from secure storage
+                      showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return _removeDialog(list[index]);
+                          });
                     },
                   )
                 ],
@@ -63,10 +67,45 @@ class _GreenBookListState extends State<GreenBookList> {
         });
   }
 
+  AlertDialog _removeDialog(Hc1 hc1) {
+    return AlertDialog(
+      title: Text("Delete Certificate"),
+      content: Text("Are you sure you want to delete?"),
+      actions: [
+        cancelButton(),
+        deleteButton(hc1),
+      ],
+    );
+  }
+
+  TextButton cancelButton() {
+    return TextButton(
+      child: Text("Cancel"),
+      onPressed: () {
+        Navigator.of(context).pop();
+      },
+    );
+  }
+
+  // set up the buttons
+  TextButton deleteButton(Hc1 hc1) {
+    return TextButton(
+      child: Text("Delete"),
+      onPressed: () {
+        QrCodeSaver.deleteQrCodeFromStorage(getCiCode(hc1));
+        Navigator.of(context).pop();
+      },
+    );
+  }
+
   String? _getName(Hc1 hc1) {
     String? familyName = hc1.certificate!.names!.familyName;
     String? givenName = hc1.certificate!.names!.givenName;
     String composed = familyName! + " " + givenName!;
     return composed;
+  }
+
+  String? getCiCode(Hc1 hc1) {
+    return hc1.certificate!.vaccinationInfo!.ci..toString();
   }
 }
