@@ -53,11 +53,13 @@ class _GreenBookListState extends State<GreenBookList> {
                   IconButton(
                     icon: Icon(Icons.delete),
                     onPressed: () {
-                      showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return _removeDialog(list[index]);
-                          });
+                      setState(() {
+                        showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return _removeDialog(list[index]);
+                            });
+                      });
                     },
                   )
                 ],
