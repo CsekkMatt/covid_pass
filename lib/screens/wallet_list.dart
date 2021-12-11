@@ -25,9 +25,25 @@ class _GreenBookListState extends State<GreenBookList> {
           if (snapshot.hasData) {
             return _certificateList(snapshot.data ?? []);
           } else {
-            return const CircularProgressIndicator();
+            // return const CircularProgressIndicator();
+            return Center(child: _emptyListMessage());
           }
         });
+  }
+
+  Container _emptyListMessage() {
+    return Container(
+      child: Text(
+        //"Please scan a QR code",
+        "",
+        textAlign: TextAlign.center,
+        style: TextStyle(
+          fontSize: 25.0,
+          color: Colors.white,
+          fontFamily: 'RobotoMono',
+        ),
+      ),
+    );
   }
 
   ListView _certificateList(List<Hc1> list) {
@@ -96,6 +112,8 @@ class _GreenBookListState extends State<GreenBookList> {
       onPressed: () {
         QrCodeSaver.deleteQrCodeFromStorage(getCiCode(hc1));
         Navigator.of(context).pop();
+        // Navigator.of(context)
+        //     .push(MaterialPageRoute(builder: (context) => MyHomePage()));
       },
     );
   }
